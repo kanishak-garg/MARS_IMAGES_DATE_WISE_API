@@ -1,0 +1,82 @@
+<html>
+
+<head>
+    <title>mars photos</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="../jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        #top {
+            height: 110px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: lavenderblush;
+            align-content: center;
+
+        }
+
+        #top div {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #down {
+            display: flex;
+            justify-content: space-around;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .imgs {
+            margin: 10px;
+            height: 150px;
+            width: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="top">
+        <div><input type="text" name="date" id="date"></div>
+        <div><button id="image">get images</button></div>
+    </div>
+    <div id="down">
+
+    </div>
+
+
+    <script>
+        $("#date").datepicker({ dateFormat: "yy-mm-dd" });
+
+        function getimages() {
+            var date = $('#date').val();
+            if (date == "") {
+                alert("enter date");
+                return;
+            }
+            var url = 'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=' + date + '&api_key=wRF9kCWhONAb6vcQBJHcGMTXTB2zPaQieAA5z5c1';
+            $.get(url, function (res) {
+                var images = res.photos;
+                // console.log(images);
+                if (images.length == 0) {
+                    alert("NO images found");
+                    return;
+                }
+                for (i in images) {
+                    var link = images[i].img_src
+                    $('<img>', {
+                        class: "imgs",
+                        src: link
+                    }).appendTo('#down');
+                }
+            })
+        }
+
+        $('#image').click(getimages);
+    </script>
+</body>
+
+</html>
